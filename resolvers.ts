@@ -1,4 +1,4 @@
-//@ts-ignore
+
 import { Request, Response } from "npm:express@4.18.2";
 import MascotaModel from "./models.ts";
 
@@ -19,7 +19,7 @@ export const getMascotaByID = async (req: Request, res: Response) => {
         const mascota= await MascotaModel.findById(req.params.id).exec(); //buscamos la mascota por id
         res.send(mascota);
     }catch (error){
-        res.status(404).send(error.message);
+        res.status(500).send(error.message);
     }
 }
 
@@ -38,7 +38,7 @@ export const addMascota = async (req: Request, res: Response) => {
         const result= await mascota.save();
         res.send(result);
     }catch (error){
-        res.status(404).send(error.message);
+        res.status(500).send(error.message);
     }
 }
 
@@ -46,9 +46,13 @@ export const addMascota = async (req: Request, res: Response) => {
 export const updateMascota = async (req: Request, res: Response) => {
     try{
         const mascota= await MascotaModel.findByIdAndUpdate(req.params.id, req.body).exec();//buscamos disco por id y lo actualizamos
-        res.send(mascota);
+        if(mascota){
+            res.send(mascota);
+        }else{
+            res.status(400).send(error.message);
+        }
     }catch (error){
-        res.status(404).send(error.message);
+        res.status(500).send(error.message);
     }
 }
 
@@ -56,8 +60,12 @@ export const updateMascota = async (req: Request, res: Response) => {
 export const deleteMascota = async (req: Request, res: Response) => {
     try{
         const mascota= await MascotaModel.findByIdAndDelete(req.params.id).exec();//buscamos disco por id y lo eliminamos
-        res.send(mascota);
+        if(mascota){
+            res.send(mascota);
+        }else{
+            res.status(400).send(error.message);
+        }
     }catch (error){
-        res.status(404).send(error.message);
+        res.status(500).send(error.message);
     }
 }
